@@ -19,32 +19,31 @@ public class LocationAsyncTask extends AsyncTask<String, Void, String> {
 
 	@Override
 	protected String doInBackground(String... params) {
-		
+
 		ReferenceClientTaps rct = new ReferenceClientTaps();
 		db = new DBAdapter(CraigsListBrowserActivity.ctx);
 		db.open();
 		try {
 			List<Location> locs = rct.getLocations();
 			Log.d(TAG, "location size:" + locs.size());
+			db.beginTransaction();
 			for (int i = 0; i < locs.size(); i++) {
 				Location loc = locs.get(i);
 				if (loc.getCountry() != null
 						&& loc.getCountry().equalsIgnoreCase("United States")
 						&& loc.getStateName() != null && loc.getCity() != null) {
-					Log.d(TAG, "Country: " + loc.getCountry() + " State: "
-							+ loc.getStateName() + " City: " + loc.getCity()
-							+ " " + loc.getCode());
+					// Log.d(TAG, "Country: " + loc.getCountry() + " State: "
+					// + loc.getStateName() + " City: " + loc.getCity()
+					// + " " + loc.getCode());
 					// save to database
-					long id = db.insert(loc.getCode(), loc.getCity(),
-							loc.getCityRank(), loc.getCountry(),
-							loc.getCountryRank(), loc.getStateCode(),
-							loc.getStateName(), loc.getHidden(),
-							loc.getLatitude(), loc.getLongitude());
-					Log.d(TAG, "ID OF ENTRY: " + id);
+					db.insert(loc.getCode(), loc.getCity(), loc.getCityRank(),
+							loc.getCountry(), loc.getCountryRank(),
+							loc.getStateCode(), loc.getStateName(),
+							loc.getHidden(), loc.getLatitude(),
+							loc.getLongitude());
 				}
 			}
-
-			Log.d(TAG, "location size:" + locs.size());
+			db.setTransactionSuccessful();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			db.close();
@@ -52,6 +51,8 @@ public class LocationAsyncTask extends AsyncTask<String, Void, String> {
 		} catch (NullPointerException e) {
 			db.close();
 			e.printStackTrace();
+		} finally {
+			db.endTransaction();
 		}
 		db.close();
 		return "";
@@ -60,8 +61,8 @@ public class LocationAsyncTask extends AsyncTask<String, Void, String> {
 	@Override
 	protected void onPostExecute(String s) {
 		Log.d(TAG, "Finished adding everythign to db");
+		((Activity) SplashActivity.ctx).setResult(1);
 		((Activity) SplashActivity.ctx).finish();
 	}
-	
 
 }

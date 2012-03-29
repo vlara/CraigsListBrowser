@@ -117,4 +117,16 @@ public class DBAdapter {
 		}
 		return mCursor;
 	}
+
+	public void beginTransaction() {
+		db.beginTransaction();
+	}
+
+	public void setTransactionSuccessful() {
+		db.setTransactionSuccessful();
+	}
+
+	public void endTransaction() {
+		db.endTransaction();
+	}
 }
