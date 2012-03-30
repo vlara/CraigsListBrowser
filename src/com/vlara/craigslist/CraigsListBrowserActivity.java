@@ -6,12 +6,17 @@ import com.vlara.craigslist.net.CategoryAsyncTask;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.*;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
@@ -26,11 +31,15 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 	public static Spinner groupSpin;
 	public static Spinner categorySpin;
 	public static Cursor stateCursor, cityCursor, groupCursor, categoryCursor;
+	public static SharedPreferences preferences;
+	public static Editor edit;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		edit = preferences.edit();
 		ctx = this;
 		db = new DBAdapter(this);
 		db.open();
@@ -66,8 +75,25 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 			}
 		}
 	}
+	
+	private OnClickListener browseClick = new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			//check preferences
+			Log.d(TAG, "STATE CODE " + preferences.getString("stateCode", ""));
+			Log.d(TAG, "Location CODE " + preferences.getString("locationCode", ""));
+			Log.d(TAG, "Group CODE " + preferences.getString("groupCode", ""));
+			Log.d(TAG, "Category CODE " + preferences.getString("categoryCode", ""));
+		}
+		
+	};
 
 	private void populateSpinners() {
+		//setup button first
+		Button browse = (Button) findViewById(R.id.Browse);
+		browse.setOnClickListener(browseClick);
+		
 		db.open();
 		groupCursor = db.getAllGroups();
 		stateCursor = db.getAllStates();
@@ -89,7 +115,8 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 		int[] to2 = new int[] { android.R.id.text1 };
 		SimpleCursorAdapter mAdapter2 = new SimpleCursorAdapter(this,
 				android.R.layout.simple_spinner_item, groupCursor, from2, to2);
-		mAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mAdapter2
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		groupSpin.setAdapter(mAdapter2);
 		groupSpin.setOnItemSelectedListener(groupClick);
 	}
@@ -101,8 +128,14 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
 			String stateName = c1.getString(c1
 					.getColumnIndexOrThrow("stateName"));
-			Log.d(TAG, "State Name: " + stateName);
+			String stateCode = c1.getString(c1
+					.getColumnIndexOrThrow("stateCode"));
+			Log.d(TAG, "State Code: " + stateCode);
+			// save state code
 			// populate City Spinner Here
+			edit.putString("stateCode", stateCode);
+			edit.putString("stateName", stateName);
+			edit.commit();
 			db.open();
 			cityCursor = db.getAllCities(stateName);
 			Log.d(TAG, "CITY: " + cityCursor.getCount());
@@ -114,7 +147,31 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 			m2Adapter
 					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			citySpin.setAdapter(m2Adapter);
+			citySpin.setOnItemSelectedListener(cityClick);
 			db.close();
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> arg0) {
+			// TODO Auto-generated method stub
+
+		}
+	};
+
+	private OnItemSelectedListener cityClick = new OnItemSelectedListener() {
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view, int pos,
+				long id) {
+			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
+			String cityName = c1.getString(c1
+					.getColumnIndexOrThrow("city"));
+			String locationCode = c1.getString(c1
+					.getColumnIndexOrThrow("code"));
+			Log.d(TAG, "CITY: " + cityName + " Code: " + locationCode);
+			edit.putString("locationCode", locationCode);
+			edit.putString("cityName", cityName);
+			edit.commit();
 		}
 
 		@Override
@@ -124,15 +181,19 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 		}
 
 	};
-	
+
 	private OnItemSelectedListener groupClick = new OnItemSelectedListener() {
 		@Override
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
 			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
-			String catGroup = c1.getString(c1
-					.getColumnIndexOrThrow("catgroup"));
-			Log.d(TAG, "catgroup: " + catGroup);
+			String catGroup = c1
+					.getString(c1.getColumnIndexOrThrow("catgroup"));
+			String catCode = c1.getString(c1.getColumnIndexOrThrow("code"));
+			Log.d(TAG, "catCode: " + catCode);
+			edit.putString("categoryCode", catCode);
+			edit.putString("categoryGroup", catGroup);
+			edit.commit();
 			// populate City Spinner Here
 			db.open();
 			categoryCursor = db.getAllCategorys(catGroup);
@@ -141,11 +202,36 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 			int[] to = new int[] { android.R.id.text1 };
 			SimpleCursorAdapter m2Adapter = new SimpleCursorAdapter(
 					getApplicationContext(),
-					android.R.layout.simple_spinner_item, categoryCursor, from, to);
+					android.R.layout.simple_spinner_item, categoryCursor, from,
+					to);
 			m2Adapter
 					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			categorySpin.setAdapter(m2Adapter);
+			categorySpin.setOnItemSelectedListener(categoryClick);
 			db.close();
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> arg0) {
+			// TODO Auto-generated method stub
+
+		}
+	};
+	
+	private OnItemSelectedListener categoryClick = new OnItemSelectedListener() {
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view, int pos,
+				long id) {
+			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
+			String categoryName = c1.getString(c1
+					.getColumnIndexOrThrow("category"));
+			String categoryCode = c1.getString(c1
+					.getColumnIndexOrThrow("code"));
+			Log.d(TAG, "CATEGORY: " + categoryName + " Code: " + categoryCode);
+			edit.putString("categoryName", categoryName);
+			edit.putString("categoryCode", categoryCode);
+			edit.commit();
 		}
 
 		@Override

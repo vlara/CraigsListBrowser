@@ -121,7 +121,7 @@ public class DBAdapter {
 
 	public Cursor getAllCities(String stateName) {
 		return db.query(DATABASE_TABLE_NAME,
-				new String[] { ID, CITY, CITYRANK }, "stateName = '"
+				new String[] { ID, CITY, CITYRANK, CODE }, "stateName = '"
 						+ stateName + "'", null, null, null, CITY);
 	}
 
@@ -132,12 +132,12 @@ public class DBAdapter {
 
 	public Cursor getAllGroups() {
 		return db.query(DATABASE_TABLE_CATEGORY_NAME, new String[] { ID,
-				CATGROUP }, null, null, CATGROUP, null, CATGROUP);
+				CATGROUP, CODE }, null, null, CATGROUP, null, CATGROUP);
 	}
 
 	public Cursor getAllCategorys(String group) {
 		return db.query(DATABASE_TABLE_CATEGORY_NAME, new String[] { ID,
-				CATCATEGORY, CATGROUP }, CATGROUP + " = '" + group + "'", null, CATCATEGORY,
+				CATCATEGORY, CATGROUP, CATCODE }, CATGROUP + " = '" + group + "'", null, CATCATEGORY,
 				null, CATCATEGORY);
 	}
 
