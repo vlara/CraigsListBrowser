@@ -23,8 +23,22 @@ public class DBAdapter {
 	public static final String HIDDEN = "hidden";
 	public static final String LATITUDE = "latitude";
 	public static final String LONGITUDE = "longitude";
+
+	private static final String DATABASE_TABLE_CATEGORY_NAME = "category";
+	public static final String CATGROUP = "catgroup";
+	public static final String CATCODE = "code";
+	public static final String CATCATEGORY = "category";
 	public final static String TAG = "CraigsApp";
 
+	private static final String DATABASE_TABLE_CREATE_CATEGORIES = "CREATE TABLE "
+			+ DATABASE_TABLE_CATEGORY_NAME
+			+ " ("
+			+ ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ CATCODE
+			+ " TEXT, "
+			+ ""
+			+ CATGROUP + " TEXT, " + CATCATEGORY + " TEXT);";
 	private static final String DATABASE_TABLE_CREATE = "CREATE TABLE "
 			+ DATABASE_TABLE_NAME + " (" + ID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + CODE + " TEXT, " + ""
@@ -53,6 +67,7 @@ public class DBAdapter {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			Log.d(TAG, "Creating Database");
+			db.execSQL(DATABASE_TABLE_CREATE_CATEGORIES);
 			db.execSQL(DATABASE_TABLE_CREATE);
 		}
 
@@ -90,6 +105,14 @@ public class DBAdapter {
 		return db.insert(DATABASE_TABLE_NAME, null, initialValues);
 	}
 
+	public long insertCategory(String group, String category, String code) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(CATCODE, code);
+		initialValues.put(CATCATEGORY, category);
+		initialValues.put(CATGROUP, group);
+		return db.insert(DATABASE_TABLE_CATEGORY_NAME, null, initialValues);
+	}
+
 	public Cursor getAllLocationss() {
 		return db.query(DATABASE_TABLE_NAME, new String[] { ID, CODE, CITY,
 				CITYRANK, COUNTRY, COUNTRYRANK, STATECODE, STATENAME, HIDDEN,
@@ -98,13 +121,24 @@ public class DBAdapter {
 
 	public Cursor getAllCities(String stateName) {
 		return db.query(DATABASE_TABLE_NAME,
-				new String[] { ID, CITY, CITYRANK }, "stateName = '" + stateName + "'", null, null, null,
-				CITY);
+				new String[] { ID, CITY, CITYRANK }, "stateName = '"
+						+ stateName + "'", null, null, null, CITY);
 	}
 
 	public Cursor getAllStates() {
 		return db.query(DATABASE_TABLE_NAME, new String[] { ID, STATECODE,
 				STATENAME }, null, null, STATENAME, null, STATENAME);
+	}
+
+	public Cursor getAllGroups() {
+		return db.query(DATABASE_TABLE_CATEGORY_NAME, new String[] { ID,
+				CATGROUP }, null, null, CATGROUP, null, CATGROUP);
+	}
+
+	public Cursor getAllCategorys(String group) {
+		return db.query(DATABASE_TABLE_CATEGORY_NAME, new String[] { ID,
+				CATCATEGORY, CATGROUP }, CATGROUP + " = '" + group + "'", null, CATCATEGORY,
+				null, CATCATEGORY);
 	}
 
 	public Cursor getLocation(long rowId) throws SQLException {

@@ -27,8 +27,11 @@ public class ReferenceClientTaps {
 	
 	public List<Location> getLocations() throws IOException {
 		List<Location> locations = referenceClient.getLocations();
-		
 		return locations;
-		
+	}
+	
+	public List<Category> getCategories() throws IOException {
+		List<Category> categories = referenceClient.getCategories();
+		return categories;
 	}
 }

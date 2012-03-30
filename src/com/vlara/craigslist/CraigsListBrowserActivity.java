@@ -2,8 +2,7 @@ package com.vlara.craigslist;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.vlara.craigslist.db.DBAdapter;
-import com.vlara.craigslist.net.LocationAsyncTask;
-
+import com.vlara.craigslist.net.CategoryAsyncTask;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +23,9 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 	public static Dialog mSplashDialog;
 	public static Spinner citySpin;
 	public static Spinner stateSpin;
-	public static Cursor stateCursor, cityCursor;
+	public static Spinner groupSpin;
+	public static Spinner categorySpin;
+	public static Cursor stateCursor, cityCursor, groupCursor, categoryCursor;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -38,26 +39,29 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 		if (stateCursor.getCount() <= 0) {
 			// Populate Database
 			Log.d(TAG, "creating async task");
-			LocationAsyncTask lat = new LocationAsyncTask();
-			lat.execute("");
+			// LocationAsyncTask lat = new LocationAsyncTask();
+			CategoryAsyncTask cat = new CategoryAsyncTask();
+			cat.execute("");
+			// lat.execute("");
 			Intent splash = new Intent(this, SplashActivity.class);
 			startActivityForResult(splash, Location);
-		}else {
+		} else {
 			setContentView(R.layout.main);
 			populateSpinners();
 		}
-		//setContentView(R.layout.main);
+		// setContentView(R.layout.main);
 		db.close();
 	}
+
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent i){
-		Log.d(TAG,"in on Activity Result");
-		if (requestCode ==  Location){
-			if (resultCode == 1){
+	public void onActivityResult(int requestCode, int resultCode, Intent i) {
+		Log.d(TAG, "in on Activity Result");
+		if (requestCode == Location) {
+			if (resultCode == 1) {
 				setContentView(R.layout.main);
-				//Returned From Location Succesfully
-				//populateSpinners
-				Log.d(TAG,"Activity Result Location");
+				// Returned From Location Succesfully
+				// populateSpinners
+				Log.d(TAG, "Activity Result Location");
 				populateSpinners();
 			}
 		}
@@ -65,10 +69,14 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 
 	private void populateSpinners() {
 		db.open();
+		groupCursor = db.getAllGroups();
 		stateCursor = db.getAllStates();
-		Log.d(TAG,"POP COUNT: " + stateCursor.getCount());
+		Log.d(TAG, "POP COUNT: " + stateCursor.getCount());
 		citySpin = (Spinner) findViewById(R.id.City);
 		stateSpin = (Spinner) findViewById(R.id.State);
+		groupSpin = (Spinner) findViewById(R.id.Group);
+		categorySpin = (Spinner) findViewById(R.id.Category);
+
 		String[] from = new String[] { "stateName" };
 		int[] to = new int[] { android.R.id.text1 };
 		SimpleCursorAdapter mAdapter = new SimpleCursorAdapter(this,
@@ -76,6 +84,14 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 		mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		stateSpin.setAdapter(mAdapter);
 		stateSpin.setOnItemSelectedListener(stateClick);
+
+		String[] from2 = new String[] { "catgroup" };
+		int[] to2 = new int[] { android.R.id.text1 };
+		SimpleCursorAdapter mAdapter2 = new SimpleCursorAdapter(this,
+				android.R.layout.simple_spinner_item, groupCursor, from2, to2);
+		mAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		groupSpin.setAdapter(mAdapter2);
+		groupSpin.setOnItemSelectedListener(groupClick);
 	}
 
 	private OnItemSelectedListener stateClick = new OnItemSelectedListener() {
@@ -98,6 +114,37 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 			m2Adapter
 					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			citySpin.setAdapter(m2Adapter);
+			db.close();
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+	};
+	
+	private OnItemSelectedListener groupClick = new OnItemSelectedListener() {
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view, int pos,
+				long id) {
+			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
+			String catGroup = c1.getString(c1
+					.getColumnIndexOrThrow("catgroup"));
+			Log.d(TAG, "catgroup: " + catGroup);
+			// populate City Spinner Here
+			db.open();
+			categoryCursor = db.getAllCategorys(catGroup);
+			Log.d(TAG, "Sub-CATEGORY: " + categoryCursor.getCount());
+			String[] from = new String[] { "category" };
+			int[] to = new int[] { android.R.id.text1 };
+			SimpleCursorAdapter m2Adapter = new SimpleCursorAdapter(
+					getApplicationContext(),
+					android.R.layout.simple_spinner_item, categoryCursor, from, to);
+			m2Adapter
+					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			categorySpin.setAdapter(m2Adapter);
 			db.close();
 		}
 
