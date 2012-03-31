@@ -1,38 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
     <TextView
-        android:layout_width="fill_parent"
+        android:id="@+id/stateText"
+        android:layout_width="75dip"
         android:layout_height="wrap_content"
-        android:text="@string/hello" />
+        android:layout_alignBaseline="@+id/State"
+        android:text="State" />
 
     <Spinner
         android:id="@+id/State"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/stateText" />
+
+    <TextView
+        android:id="@+id/cityText"
+        android:layout_width="75dip"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/City"
+        android:text="city" />
 
     <Spinner
         android:id="@+id/City"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/State"
+        android:layout_toRightOf="@+id/cityText" />
+
+    <TextView
+        android:id="@+id/groupText"
+        android:layout_width="75dip"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Group"
+        android:text="group" />
 
     <Spinner
         android:id="@+id/Group"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/City"
+        android:layout_toRightOf="@+id/groupText" />
+
+    <TextView
+        android:id="@+id/categoryText"
+        android:layout_width="75dip"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Category"
+        android:text="Category" />
 
     <Spinner
         android:id="@+id/Category"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Group"
+        android:layout_toRightOf="@id/categoryText" />
+
+    <EditText
+        android:id="@+id/Search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Category"
+        android:layout_toRightOf="@+id/searchText"
+        android:hint="Blank for Wildcard" >
+
+        <requestFocus />
+    </EditText>
 
     <Button
         android:id="@+id/Browse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/Search"
+        android:layout_centerHorizontal="true"
         android:text="Browse" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/searchText"
+        android:layout_width="75dip"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/Search"
+        android:layout_alignBottom="@+id/Search"
+        android:layout_toLeftOf="@+id/Category"
+        android:text="Search" />
+
+</RelativeLayout>
