@@ -17,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
@@ -85,6 +86,13 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 			Log.d(TAG, "Location CODE " + preferences.getString("locationCode", ""));
 			Log.d(TAG, "Group CODE " + preferences.getString("groupCode", ""));
 			Log.d(TAG, "Category CODE " + preferences.getString("categoryCode", ""));
+			EditText searchTerm = (EditText) findViewById(R.id.Search);
+			
+			Intent i = new Intent(getApplicationContext(), listActivity.class);
+			i.putExtra("searchTerm", searchTerm.getText().toString());
+			startActivity(i);
+			//Start new Activity
+			
 		}
 		
 	};
