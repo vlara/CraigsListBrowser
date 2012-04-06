@@ -4,12 +4,15 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.SimpleCursorAdapter;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.threetaps.model.Posting;
+import com.vlara.craigslist.db.DBAdapter;
 import com.vlara.craigslist.net.PostAsyncTask;
 
 public class listActivity extends SherlockListActivity {
@@ -17,7 +20,10 @@ public class listActivity extends SherlockListActivity {
 	public static SharedPreferences preferences;
 	public static Context ctx;
 	public static List<Posting> posts;
-	public static PostListAdapter psa;
+	// public static PostListAdapter psa;
+	//public static Cursor postCursor;
+	public static DBAdapter db;
+	public static SimpleCursorAdapter mAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,15 +37,40 @@ public class listActivity extends SherlockListActivity {
 		String category = preferences.getString("categoryCode", "");
 		String searchTerm = "";
 		Bundle extras = getIntent().getExtras();
+		db = new DBAdapter(this);
+		db.open();
 		if (extras != null) {
 			searchTerm = extras.getString("searchTerm");
 		}
-		pat.execute(new String[] { location, category, searchTerm });
-		psa = new PostListAdapter(this, posts, this);
-		getListView().setAdapter(psa);
-	}
-	
-	public void test(){
+		Cursor postCursor = db.getAllPosts();
 		
+		Log.d(TAG, "POST COUNT: " + postCursor.getCount());
+		if (postCursor.getCount() <= 0) {
+			db.close();
+			pat.execute(new String[] { location, category, searchTerm });
+		} else
+			populateList();
+		// psa = new PostListAdapter(this, posts, this);
+	
+	}
+
+	public void test() {
+
+	}
+
+	public void populateList() {
+		Log.d(TAG, "In Populate List");
+		db.open();
+		Cursor postCursor = db.getAllPosts();
+		String[] columns = new String[] { "postKey", "heading",
+				"timestamp" };
+		int[] to = new int[] { R.id.postkey, R.id.posttitle, R.id.postday };
+
+		SimpleCursorAdapter mAdapter = new SimpleCursorAdapter(this, R.layout.post_list_item,
+				postCursor, columns, to);
+
+		Log.d(TAG, "CLOSING THE DB");
+		//db.close();
+		getListView().setAdapter(mAdapter);
 	}
 }

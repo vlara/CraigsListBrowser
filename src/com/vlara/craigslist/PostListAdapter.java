@@ -1,5 +1,6 @@
 package com.vlara.craigslist;
 
+import java.util.Date;
 import java.util.List;
 
 import com.threetaps.model.Posting;
@@ -17,7 +18,8 @@ public class PostListAdapter extends BaseAdapter {
 	Context ctx;
 	List<Posting> posts;
 
-	public PostListAdapter(Context context, List<Posting> _posts, Activity activity) {
+	public PostListAdapter(Context context, List<Posting> _posts,
+			Activity activity) {
 		this.activity = activity;
 		ctx = context;
 		posts = _posts;
@@ -50,19 +52,32 @@ public class PostListAdapter extends BaseAdapter {
 		if (rowView == null) {
 			LayoutInflater inflator = activity.getLayoutInflater();
 			rowView = inflator.inflate(R.layout.post_list_item, null);
-			
+
 			ps = new PostView();
 			ps.postTitle = (TextView) rowView.findViewById(R.id.posttitle);
 			ps.postDay = (TextView) rowView.findViewById(R.id.postday);
-			
+
 			rowView.setTag(ps);
 		} else {
 			ps = (PostView) rowView.getTag();
 		}
 		Posting currentPost = posts.get(position);
 		ps.postTitle.setText(currentPost.getHeading());
-		ps.postDay.setText(currentPost.getTimestamp().toString());
+		makeTime(currentPost.getTimestamp());
+		// ps.postDay.setText();
 		return rowView;
+	}
+
+	private void makeTime(Date timestamp) {
+		String date = "";
+		switch (timestamp.getDate()) {
+			case 0:
+				date += "Jan";
+				break;
+			case 1: 
+				date += "Feb";
+		}
+
 	}
 
 	protected static class PostView {
