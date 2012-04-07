@@ -3,11 +3,16 @@ package com.vlara.craigslist;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.SimpleCursorAdapter;
 
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -54,10 +59,6 @@ public class listActivity extends SherlockListActivity {
 	
 	}
 
-	public void test() {
-
-	}
-
 	public void populateList() {
 		Log.d(TAG, "In Populate List");
 		db.open();
@@ -72,5 +73,22 @@ public class listActivity extends SherlockListActivity {
 		Log.d(TAG, "CLOSING THE DB");
 		//db.close();
 		getListView().setAdapter(mAdapter);
+		getListView().setOnItemClickListener(postClick2);
 	}
+	
+	private OnItemClickListener postClick2 = new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int pos,
+				long arg3) {
+			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
+			int PostId = c1.getInt(c1.getColumnIndex("_id"));
+			Log.d(TAG, "PostID: " + PostId);
+			Intent i = new Intent(getApplicationContext(), PostActivity.class);
+			i.putExtra("postID", PostId);
+			startActivity(i);
+		}
+		
+	};
+	
 }

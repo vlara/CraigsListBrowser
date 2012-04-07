@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/postHeading"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="HEADING"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/postAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="email" />
+
+    <ScrollView
+        android:id="@+id/SCROLLER_ID"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:layout_weight="0.85" >
+
+        <TextView
+            android:id="@+id/postBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".70"
+            android:text="Body" />
+    </ScrollView>
+
+</LinearLayout>

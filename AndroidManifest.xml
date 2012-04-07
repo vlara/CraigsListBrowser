@@ -23,7 +23,13 @@
         </activity>
         <activity android:name=".SplashActivity" >
         </activity>
-        <activity android:name=".listActivity" android:theme="@style/Theme.Sherlock.Light" >
+        <activity
+            android:name=".listActivity"
+            android:theme="@style/Theme.Sherlock.Light" >
+        </activity>
+        <activity
+            android:name=".PostActivity"
+            android:theme="@style/Theme.Sherlock.Light" >
         </activity>
     </application>
 

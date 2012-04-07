@@ -44,6 +44,7 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 		ctx = this;
 		db = new DBAdapter(this);
 		db.open();
+		db.clearPosts();
 		stateCursor = db.getAllStates();
 		Log.d(TAG, "Count: " + stateCursor.getCount());
 		if (stateCursor.getCount() <= 0) {
@@ -66,6 +67,7 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent i) {
 		Log.d(TAG, "in on Activity Result");
+		//reset posts db
 		if (requestCode == Location) {
 			if (resultCode == 1) {
 				setContentView(R.layout.main);

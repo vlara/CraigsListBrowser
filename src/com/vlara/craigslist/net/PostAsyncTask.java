@@ -47,15 +47,7 @@ public class PostAsyncTask extends AsyncTask<String, Void, String> {
 	@Override
 	protected void onPostExecute(String posts) {
 		Log.d(TAG, "OnPostExecute");
-//		db.open();
-//		listActivity.postCursor = db.getAllPosts();
-//		String[] columns = new String[] { "postKey", "heading", "timestamp" };
-//		int[] to = new int[] { R.id.postkey, R.id.posttitle, R.id.postday };
-//		listActivity.mAdapter = new SimpleCursorAdapter(listActivity.ctx,
-//				R.layout.post_list_item, listActivity.postCursor, columns, to);
-		//listActivity.mAdapter.notifyDataSetChanged();
 		((listActivity) listActivity.ctx).populateList();
-		//db.close();
 	}
 
 }

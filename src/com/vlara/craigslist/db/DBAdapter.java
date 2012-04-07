@@ -142,7 +142,7 @@ public class DBAdapter {
 		iv.put(postExternalURL, post.getExternalURL());
 		iv.put(postAccountName, post.getAccountName());
 		iv.put(postAccountID, post.getAccountID());
-		iv.put(postTimestamp, post.getTimestamp().toGMTString());
+		iv.put(postTimestamp, post.getTimestamp().toGMTString().substring(0, post.getTimestamp().toGMTString().indexOf(" ", 9)));
 		iv.put(postIndexed, post.getIndexed().toGMTString());
 		return db.insert(DATABASE_TABLE_POSTS_NAME, null, iv);
 	}
@@ -207,6 +207,10 @@ public class DBAdapter {
 				CATCATEGORY, CATGROUP, CATCODE }, CATGROUP + " = '" + group
 				+ "'", null, CATCATEGORY, null, CATCATEGORY);
 	}
+	
+	public Cursor getPost(int postID) {
+		return db.query(DATABASE_TABLE_POSTS_NAME, null, ID + " = '" + postID + "'", null, null, null, null);
+	}
 
 	public Cursor getLocation(long rowId) throws SQLException {
 		Cursor mCursor = db.query(true, DATABASE_TABLE_NAME, new String[] { ID,
@@ -217,6 +221,10 @@ public class DBAdapter {
 			mCursor.moveToFirst();
 		}
 		return mCursor;
+	}
+	
+	public void clearPosts() throws SQLException {
+		db.delete(DATABASE_TABLE_POSTS_NAME, null, null);
 	}
 
 	public void beginTransaction() {
