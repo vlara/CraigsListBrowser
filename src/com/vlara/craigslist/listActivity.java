@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.SimpleCursorAdapter;
 
 import com.actionbarsherlock.app.SherlockListActivity;
@@ -25,20 +24,27 @@ public class listActivity extends SherlockListActivity {
 	public static SharedPreferences preferences;
 	public static Context ctx;
 	public static List<Posting> posts;
-	// public static PostListAdapter psa;
-	//public static Cursor postCursor;
 	public static DBAdapter db;
 	public static SimpleCursorAdapter mAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setTitle("Post List");
+		
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		ctx = this;
 		setContentView(R.layout.list);
 		PostAsyncTask pat = new PostAsyncTask();
-		String location = preferences.getString("locationCode", "");
+		Log.d(TAG, "STATE CODE " + preferences.getString("stateCode", ""));
+		Log.d(TAG, "Location CODE " + preferences.getString("locationCode", ""));
 		Log.d(TAG, "Group CODE " + preferences.getString("groupCode", ""));
+		Log.d(TAG, "Category CODE " + preferences.getString("categoryCode", ""));
+		
+		String location = preferences.getString("locationCode", "");
 		String category = preferences.getString("categoryCode", "");
 		String searchTerm = "";
 		Bundle extras = getIntent().getExtras();
@@ -54,9 +60,19 @@ public class listActivity extends SherlockListActivity {
 			db.close();
 			pat.execute(new String[] { location, category, searchTerm });
 		} else
-			populateList();
-		// psa = new PostListAdapter(this, posts, this);
+			populateList();	
+		db.close();
+	}
 	
+	@Override
+	public boolean onMenuItemSelected(int featureId,
+			com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+		return super.onMenuItemSelected(featureId, item);
 	}
 
 	public void populateList() {
@@ -71,9 +87,9 @@ public class listActivity extends SherlockListActivity {
 				postCursor, columns, to);
 
 		Log.d(TAG, "CLOSING THE DB");
-		//db.close();
 		getListView().setAdapter(mAdapter);
 		getListView().setOnItemClickListener(postClick2);
+		db.close();
 	}
 	
 	private OnItemClickListener postClick2 = new OnItemClickListener() {

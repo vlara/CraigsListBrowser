@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/FavsButton"
+        android:showAsAction="always"
+        android:title="Favs"> <!-- android:icon="@drawable/ic_action_settings"> -->
+>
+    </item>
+    <item
+        android:id="@+id/SearchButton"
+        android:showAsAction="always"
+        android:title="Search">
+    </item>
+
+</menu>

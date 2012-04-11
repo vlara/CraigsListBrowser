@@ -1,8 +1,10 @@
 package com.vlara.craigslist.net;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
+import com.google.gson.JsonSyntaxException;
 import com.threetaps.model.Posting;
 import com.vlara.craigslist.SearchClientTaps;
 import com.vlara.craigslist.listActivity;
@@ -22,10 +24,10 @@ public class PostAsyncTask extends AsyncTask<String, Void, String> {
 		SearchClientTaps sct = new SearchClientTaps();
 		db = new DBAdapter(listActivity.ctx);
 		db.open();
+		db.beginTransaction();
 		try {
 			posts = sct.search(params[2], params[0], params[1]);
 			Log.d(TAG, "Posts size: " + posts.size());
-			db.beginTransaction();
 			for (int i = 0; i < posts.size(); i++) {
 				Posting post = posts.get(i);
 				if (post.getHeading() != null) {
@@ -34,10 +36,13 @@ public class PostAsyncTask extends AsyncTask<String, Void, String> {
 			}
 			db.setTransactionSuccessful();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			db.close();
 			e.printStackTrace();
-		} finally {
+		}catch (JsonSyntaxException e) {
+			//db.close();
+			e.printStackTrace();
+			}
+		finally {
 			db.endTransaction();
 		}
 		db.close();

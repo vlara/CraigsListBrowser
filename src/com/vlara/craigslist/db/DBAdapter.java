@@ -15,6 +15,7 @@ public class DBAdapter {
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_TABLE_NAME = "Locations";
 	private static final String DATABASE_TABLE_POSTS_NAME = "Posts";
+	private static final String DATABASE_TABLE_FAVS_NAME = "Favs";
 	public static final String ID = "_id";
 	public static final String CODE = "code";
 	public static final String COUNTRYRANK = "countryRank";
@@ -44,7 +45,6 @@ public class DBAdapter {
 	public static final String postPrice = "price";
 	public static final String postCurrency = "currency";
 	// replace with another db table
-	public static final String postImages = "images";
 	public static final String postStatus = "status";
 	public static final String postExternalID = "externalID";
 	public static final String postExternalURL = "externalURL";
@@ -77,11 +77,21 @@ public class DBAdapter {
 			+ postLocation + " TEXT, " + postCategory + " TEXT, " + postSource
 			+ " TEXT, " + postHeading + " TEXT, " + postBody + " TEXT, "
 			+ postLat + " TEXT, " + postLong + " TEXT, " + postPrice
-			+ " TEXT, " + postCurrency + " TEXT, " + postImages + " TEXT, "
-			+ postStatus + " TEXT, " + postExternalID + " TEXT, "
-			+ postExternalURL + " TEXT, " + postAccountName + " TEXT, "
-			+ postAccountID + " TEXT, " + postTimestamp + " TEXT, "
-			+ postIndexed + " TEXT );";
+			+ " TEXT, " + postCurrency + " TEXT, " + postStatus + " TEXT, "
+			+ postExternalID + " TEXT, " + postExternalURL + " TEXT, "
+			+ postAccountName + " TEXT, " + postAccountID + " TEXT, "
+			+ postTimestamp + " TEXT, " + postIndexed + " TEXT );";
+
+	private static final String DATABASE_TABLE_CREATE_FAVS = "CREATE TABLE "
+			+ DATABASE_TABLE_FAVS_NAME + " (" + ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, " + postKey + " TEXT, " + ""
+			+ postLocation + " TEXT, " + postCategory + " TEXT, " + postSource
+			+ " TEXT, " + postHeading + " TEXT, " + postBody + " TEXT, "
+			+ postLat + " TEXT, " + postLong + " TEXT, " + postPrice
+			+ " TEXT, " + postCurrency + " TEXT, " + postStatus + " TEXT, "
+			+ postExternalID + " TEXT, " + postExternalURL + " TEXT, "
+			+ postAccountName + " TEXT, " + postAccountID + " TEXT, "
+			+ postTimestamp + " TEXT, " + postIndexed + " TEXT );";
 
 	private final Context context;
 
@@ -104,6 +114,7 @@ public class DBAdapter {
 			Log.d(TAG, "Creating Database");
 			db.execSQL(DATABASE_TABLE_CREATE_CATEGORIES);
 			db.execSQL(DATABASE_TABLE_CREATE_POSTS);
+			db.execSQL(DATABASE_TABLE_CREATE_FAVS);
 			db.execSQL(DATABASE_TABLE_CREATE);
 		}
 
@@ -142,9 +153,21 @@ public class DBAdapter {
 		iv.put(postExternalURL, post.getExternalURL());
 		iv.put(postAccountName, post.getAccountName());
 		iv.put(postAccountID, post.getAccountID());
-		iv.put(postTimestamp, post.getTimestamp().toGMTString().substring(0, post.getTimestamp().toGMTString().indexOf(" ", 9)));
+		iv.put(postTimestamp,
+				post.getTimestamp()
+						.toGMTString()
+						.substring(
+								0,
+								post.getTimestamp().toGMTString()
+										.indexOf(" ", 9)));
 		iv.put(postIndexed, post.getIndexed().toGMTString());
 		return db.insert(DATABASE_TABLE_POSTS_NAME, null, iv);
+	}
+
+	public long insertFav(String key) {
+
+		return 0;
+
 	}
 
 	public long insert(String Code, String City, int i, String Country, int j,
@@ -207,9 +230,10 @@ public class DBAdapter {
 				CATCATEGORY, CATGROUP, CATCODE }, CATGROUP + " = '" + group
 				+ "'", null, CATCATEGORY, null, CATCATEGORY);
 	}
-	
+
 	public Cursor getPost(int postID) {
-		return db.query(DATABASE_TABLE_POSTS_NAME, null, ID + " = '" + postID + "'", null, null, null, null);
+		return db.query(DATABASE_TABLE_POSTS_NAME, null, ID + " = '" + postID
+				+ "'", null, null, null, null);
 	}
 
 	public Cursor getLocation(long rowId) throws SQLException {
@@ -222,7 +246,7 @@ public class DBAdapter {
 		}
 		return mCursor;
 	}
-	
+
 	public void clearPosts() throws SQLException {
 		db.delete(DATABASE_TABLE_POSTS_NAME, null, null);
 	}

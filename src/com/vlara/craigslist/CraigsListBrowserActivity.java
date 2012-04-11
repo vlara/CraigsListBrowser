@@ -1,8 +1,10 @@
 package com.vlara.craigslist;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuInflater;
 import com.vlara.craigslist.db.DBAdapter;
 import com.vlara.craigslist.net.CategoryAsyncTask;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,10 +15,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.*;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
@@ -39,12 +39,16 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// ActionBar setup
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		// getSupportActionBar().setTitle("Search");
+
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		edit = preferences.edit();
 		ctx = this;
 		db = new DBAdapter(this);
 		db.open();
-		db.clearPosts();
+
 		stateCursor = db.getAllStates();
 		Log.d(TAG, "Count: " + stateCursor.getCount());
 		if (stateCursor.getCount() <= 0) {
@@ -67,7 +71,10 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent i) {
 		Log.d(TAG, "in on Activity Result");
-		//reset posts db
+		db.open();
+		db.clearPosts();
+		db.close();
+		// reset posts db
 		if (requestCode == Location) {
 			if (resultCode == 1) {
 				setContentView(R.layout.main);
@@ -78,33 +85,51 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 			}
 		}
 	}
-	
-	private OnClickListener browseClick = new OnClickListener(){
 
-		@Override
-		public void onClick(View v) {
-			//check preferences
-			Log.d(TAG, "STATE CODE " + preferences.getString("stateCode", ""));
-			Log.d(TAG, "Location CODE " + preferences.getString("locationCode", ""));
-			Log.d(TAG, "Group CODE " + preferences.getString("groupCode", ""));
-			Log.d(TAG, "Category CODE " + preferences.getString("categoryCode", ""));
-			EditText searchTerm = (EditText) findViewById(R.id.Search);
-			
-			Intent i = new Intent(getApplicationContext(), listActivity.class);
-			i.putExtra("searchTerm", searchTerm.getText().toString());
-			startActivity(i);
-			//Start new Activity
-			
+	@Override
+	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.searchmenu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onMenuItemSelected(int featureId,
+			com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.SearchButton:
+			search();
+			return true;
+		case R.id.FavsButton:
+			favs();
+			return true;
+		case android.R.id.home:
+			Log.d(TAG, "TOUCHED HOME");
+			return true;
 		}
-		
-	};
+		return super.onMenuItemSelected(featureId, item);
+	}
+
+	public void search() {
+		Log.d(TAG, "STATE CODE " + preferences.getString("stateCode", ""));
+		Log.d(TAG, "Location CODE " + preferences.getString("locationCode", ""));
+		Log.d(TAG, "Group CODE " + preferences.getString("groupCode", ""));
+		Log.d(TAG, "Category CODE " + preferences.getString("categoryCode", ""));
+		EditText searchTerm = (EditText) findViewById(R.id.Search);
+
+		Intent i = new Intent(getApplicationContext(), listActivity.class);
+		i.putExtra("searchTerm", searchTerm.getText().toString());
+		startActivityForResult(i, Location);
+	}
+
+	public void favs() {
+		Log.d(TAG, "Clicked Favs");
+	}
 
 	private void populateSpinners() {
-		//setup button first
-		Button browse = (Button) findViewById(R.id.Browse);
-		browse.setOnClickListener(browseClick);
-		
+		// setup button first
 		db.open();
+		db.clearPosts();
 		groupCursor = db.getAllGroups();
 		stateCursor = db.getAllStates();
 		Log.d(TAG, "POP COUNT: " + stateCursor.getCount());
@@ -174,10 +199,9 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
 			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
-			String cityName = c1.getString(c1
-					.getColumnIndexOrThrow("city"));
-			String locationCode = c1.getString(c1
-					.getColumnIndexOrThrow("code"));
+			String cityName = c1.getString(c1.getColumnIndexOrThrow("city"));
+			String locationCode = c1
+					.getString(c1.getColumnIndexOrThrow("code"));
 			Log.d(TAG, "CITY: " + cityName + " Code: " + locationCode);
 			edit.putString("locationCode", locationCode);
 			edit.putString("cityName", cityName);
@@ -227,7 +251,7 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 
 		}
 	};
-	
+
 	private OnItemSelectedListener categoryClick = new OnItemSelectedListener() {
 
 		@Override
@@ -236,8 +260,8 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
 			String categoryName = c1.getString(c1
 					.getColumnIndexOrThrow("category"));
-			String categoryCode = c1.getString(c1
-					.getColumnIndexOrThrow("code"));
+			String categoryCode = c1
+					.getString(c1.getColumnIndexOrThrow("code"));
 			Log.d(TAG, "CATEGORY: " + categoryName + " Code: " + categoryCode);
 			edit.putString("categoryName", categoryName);
 			edit.putString("categoryCode", categoryCode);

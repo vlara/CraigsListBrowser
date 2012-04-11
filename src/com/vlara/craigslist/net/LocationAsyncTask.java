@@ -29,13 +29,11 @@ public class LocationAsyncTask extends AsyncTask<String, Void, String> {
 			db.beginTransaction();
 			for (int i = 0; i < locs.size(); i++) {
 				Location loc = locs.get(i);
-				if (loc.getCountry() != null
+				
+				if ((loc.getCountry() != null
 						&& loc.getCountry().equalsIgnoreCase("United States")
-						&& loc.getStateName() != null && loc.getCity() != null) {
-					// Log.d(TAG, "Country: " + loc.getCountry() + " State: "
-					// + loc.getStateName() + " City: " + loc.getCity()
-					// + " " + loc.getCode());
-					// save to database
+						&& loc.getStateName() != null && loc.getCity() != null)) {
+
 					db.insert(loc.getCode(), loc.getCity(), loc.getCityRank(),
 							loc.getCountry(), loc.getCountryRank(),
 							loc.getStateCode(), loc.getStateName(),
@@ -45,7 +43,6 @@ public class LocationAsyncTask extends AsyncTask<String, Void, String> {
 			}
 			db.setTransactionSuccessful();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			db.close();
 			e.printStackTrace();
 		} catch (NullPointerException e) {

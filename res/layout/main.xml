@@ -70,14 +70,6 @@
         <requestFocus />
     </EditText>
 
-    <Button
-        android:id="@+id/Browse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/Search"
-        android:layout_centerHorizontal="true"
-        android:text="Browse" />
-
     <TextView
         android:id="@+id/searchText"
         android:layout_width="75dip"
