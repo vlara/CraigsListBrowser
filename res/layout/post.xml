@@ -17,6 +17,13 @@
         android:layout_height="wrap_content"
         android:text="email" />
 
+    <TextView
+        android:id="@+id/externalURL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#0276FD"
+        android:text="URL" />
+
     <ScrollView
         android:id="@+id/SCROLLER_ID"
         android:layout_width="fill_parent"

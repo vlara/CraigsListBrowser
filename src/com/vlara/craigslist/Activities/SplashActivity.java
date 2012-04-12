@@ -1,4 +1,6 @@
-package com.vlara.craigslist;
+package com.vlara.craigslist.Activities;
+
+import com.vlara.craigslist.R;
 
 import android.app.Activity;
 import android.content.Context;

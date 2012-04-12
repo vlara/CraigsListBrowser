@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.gson.JsonSyntaxException;
 import com.threetaps.model.Posting;
 import com.vlara.craigslist.SearchClientTaps;
-import com.vlara.craigslist.listActivity;
+import com.vlara.craigslist.Activities.listActivity;
 import com.vlara.craigslist.db.DBAdapter;
 
 import android.os.AsyncTask;

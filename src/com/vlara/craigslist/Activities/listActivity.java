@@ -1,4 +1,4 @@
-package com.vlara.craigslist;
+package com.vlara.craigslist.Activities;
 
 import java.util.List;
 
@@ -16,6 +16,7 @@ import android.widget.SimpleCursorAdapter;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.threetaps.model.Posting;
+import com.vlara.craigslist.R;
 import com.vlara.craigslist.db.DBAdapter;
 import com.vlara.craigslist.net.PostAsyncTask;
 

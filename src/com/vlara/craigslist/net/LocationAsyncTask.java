@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import com.threetaps.model.Location;
-import com.vlara.craigslist.CraigsListBrowserActivity;
 import com.vlara.craigslist.ReferenceClientTaps;
-import com.vlara.craigslist.SplashActivity;
+import com.vlara.craigslist.Activities.CraigsListBrowserActivity;
+import com.vlara.craigslist.Activities.SplashActivity;
 import com.vlara.craigslist.db.DBAdapter;
 
 import android.app.Activity;

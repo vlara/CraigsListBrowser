@@ -9,6 +9,13 @@
         >
     </item>
     <item
+        android:id="@+id/browsePost"
+        android:showAsAction="always"
+        android:title="Browse"
+        android:icon="@drawable/website"
+        >
+    </item>
+    <item
         android:id="@+id/ShareButton"
         android:showAsAction="always"
         android:title="Share">

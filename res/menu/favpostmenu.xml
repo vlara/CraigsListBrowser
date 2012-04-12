@@ -8,6 +8,13 @@
         android:icon="@drawable/discard"
         >
     </item>
+     <item
+        android:id="@+id/browseFavPost"
+        android:showAsAction="always"
+        android:title="Browse"
+        android:icon="@drawable/website"
+        >
+    </item>
     <item
         android:id="@+id/FavShareButton"
         android:showAsAction="always"

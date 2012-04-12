@@ -1,7 +1,8 @@
-package com.vlara.craigslist;
+package com.vlara.craigslist.Activities;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuInflater;
+import com.vlara.craigslist.R;
 import com.vlara.craigslist.db.DBAdapter;
 import com.vlara.craigslist.net.CategoryAsyncTask;
 

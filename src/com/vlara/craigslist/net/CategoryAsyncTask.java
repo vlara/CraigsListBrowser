@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import com.threetaps.model.Category;
-import com.vlara.craigslist.CraigsListBrowserActivity;
 import com.vlara.craigslist.ReferenceClientTaps;
+import com.vlara.craigslist.Activities.CraigsListBrowserActivity;
 import com.vlara.craigslist.db.DBAdapter;
 
 import android.os.AsyncTask;
