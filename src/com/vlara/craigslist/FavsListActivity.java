@@ -11,22 +11,21 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleCursorAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.threetaps.model.Posting;
 import com.vlara.craigslist.db.DBAdapter;
-import com.vlara.craigslist.net.PostAsyncTask;
 
-public class listActivity extends SherlockListActivity {
+public class FavsListActivity extends SherlockListActivity {
 	public final static String TAG = "CraigsApp";
 	public static SharedPreferences preferences;
 	public static Context ctx;
 	public static List<Posting> posts;
 	public static DBAdapter db;
 	public static SimpleCursorAdapter mAdapter;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,48 +37,21 @@ public class listActivity extends SherlockListActivity {
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		ctx = this;
 		setContentView(R.layout.list);
-		PostAsyncTask pat = new PostAsyncTask();
-		Log.d(TAG, "STATE CODE " + preferences.getString("stateCode", ""));
-		Log.d(TAG, "Location CODE " + preferences.getString("locationCode", ""));
-		Log.d(TAG, "Group CODE " + preferences.getString("groupCode", ""));
-		Log.d(TAG, "Category CODE " + preferences.getString("categoryCode", ""));
 		
-		String location = preferences.getString("locationCode", "");
-		String category = preferences.getString("categoryCode", "");
-		String searchTerm = "";
 		Bundle extras = getIntent().getExtras();
 		db = new DBAdapter(this);
 		db.open();
 		if (extras != null) {
-			searchTerm = extras.getString("searchTerm");
+			//searchTerm = extras.getString("searchTerm");
 		}
-		Cursor postCursor = db.getAllPosts();
-		
-		Log.d(TAG, "POST COUNT: " + postCursor.getCount());
-		if (postCursor.getCount() <= 0) {
-			db.close();
-			pat.execute(new String[] { location, category, searchTerm });
-		} else
-			populateList();	
+		populateList();	
 		db.close();
 	}
 	
-	@Override
-	public boolean onMenuItemSelected(int featureId,
-			com.actionbarsherlock.view.MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		}
-		return super.onMenuItemSelected(featureId, item);
-	}
-	
-
 	public void populateList() {
 		Log.d(TAG, "In Populate List");
 		db.open();
-		Cursor postCursor = db.getAllPosts();
+		Cursor postCursor = db.getAllFavs();
 		String[] columns = new String[] { "postKey", "heading",
 				"timestamp" };
 		int[] to = new int[] { R.id.postkey, R.id.posttitle, R.id.postday };
@@ -101,11 +73,28 @@ public class listActivity extends SherlockListActivity {
 			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
 			int PostId = c1.getInt(c1.getColumnIndex("_id"));
 			Log.d(TAG, "PostID: " + PostId);
-			Intent i = new Intent(getApplicationContext(), PostActivity.class);
+			Intent i = new Intent(getApplicationContext(), FavPostActivity.class);
 			i.putExtra("postID", PostId);
 			startActivity(i);
 		}
 		
 	};
+	
+	@Override
+	public boolean onMenuItemSelected(int featureId,
+			com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		}
+		return super.onMenuItemSelected(featureId, item);
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		populateList();
+	}
 	
 }

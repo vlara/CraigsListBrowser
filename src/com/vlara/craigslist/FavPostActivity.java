@@ -15,7 +15,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.threetaps.model.Posting;
 import com.vlara.craigslist.db.DBAdapter;
 
-public class PostActivity extends SherlockActivity {
+public class FavPostActivity extends SherlockActivity {
 	public final static String TAG = "CraigsApp";
 	public TextView heading;
 	public TextView body;
@@ -43,7 +43,7 @@ public class PostActivity extends SherlockActivity {
 			Log.d(TAG, "POSTID: " + postID);
 		}
 		db.open();
-		Cursor c = db.getPost(postID);
+		Cursor c = db.getFav(postID);
 		
 		if (c.moveToFirst()) {
 			Log.d(TAG, "Cursor Count: " + c.getCount());
@@ -63,7 +63,7 @@ public class PostActivity extends SherlockActivity {
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.favsmenu, menu);
+		inflater.inflate(R.menu.favpostmenu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -74,25 +74,23 @@ public class PostActivity extends SherlockActivity {
 		case android.R.id.home:
 			finish();
 			return true;
-		case R.id.Favorite:
-			Log.d(TAG, "Pressed Favorite Button");
-			addFav();
-			//MenuItem favIco = (MenuItem) findViewById(R.id.Favorite);
-			//Drawable d = getResources().getDrawable(R.drawable.important);
-			item.setIcon(R.drawable.not_important);
-			//item.setIcon(d);
+		case R.id.deletePost:
+			Log.d(TAG, "Pressed Delete Button");
+			deleteFav();
+			finish();
 			return true;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
 
-	public void addFav(){
+	public void deleteFav(){
 		db.open();
-		db.insertFav(post);
+		db.deleteFav(postID);
 		db.close();
 	}
 	public Posting cursorToPost(Cursor c) {
 		Posting p = new Posting();
+		postID = Integer.parseInt(c.getString(c.getColumnIndexOrThrow("_id")));
 		p.setAccountID(c.getString(c.getColumnIndexOrThrow("accountID")));
 		p.setAccountName(c.getString(c.getColumnIndexOrThrow("accountName")));
 		p.setBody(c.getString(c.getColumnIndexOrThrow("body")));

@@ -124,6 +124,8 @@ public class CraigsListBrowserActivity extends SherlockActivity {
 
 	public void favs() {
 		Log.d(TAG, "Clicked Favs");
+		Intent i = new Intent(this, FavsListActivity.class);
+		startActivity(i);
 	}
 
 	private void populateSpinners() {

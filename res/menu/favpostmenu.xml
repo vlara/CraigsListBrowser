@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/deletePost"
+        android:showAsAction="always"
+        android:title="Delete"
+        android:icon="@drawable/discard"
+        >
+    </item>
+    <item
+        android:id="@+id/FavShareButton"
+        android:showAsAction="always"
+        android:title="Share">
+    </item>
+
+</menu>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/Favorite"
+        android:showAsAction="always"
+        android:title="Favs"
+        android:icon="@drawable/important"
+        >
+    </item>
+    <item
+        android:id="@+id/ShareButton"
+        android:showAsAction="always"
+        android:title="Share">
+    </item>
+
+</menu>

@@ -164,9 +164,33 @@ public class DBAdapter {
 		return db.insert(DATABASE_TABLE_POSTS_NAME, null, iv);
 	}
 
-	public long insertFav(String key) {
-
-		return 0;
+	public long insertFav(Posting post) {
+		
+		ContentValues iv = new ContentValues();
+		iv.put(postKey, post.getPostKey());
+		iv.put(postLocation, post.getLocation());
+		iv.put(postCategory, post.getCategory());
+		iv.put(postSource, post.getSource());
+		iv.put(postHeading, post.getHeading().trim());
+		iv.put(postBody, post.getBody());
+		iv.put(postLat, post.getLatitude());
+		iv.put(postLong, post.getLongitude());
+		iv.put(postPrice, post.getPrice());
+		iv.put(postCurrency, post.getCurrency());
+		iv.put(postStatus, post.getStatus());
+		iv.put(postExternalID, post.getExternalID());
+		iv.put(postExternalURL, post.getExternalURL());
+		iv.put(postAccountName, post.getAccountName());
+		iv.put(postAccountID, post.getAccountID());
+		iv.put(postTimestamp,
+				post.getTimestamp()
+						.toGMTString()
+						.substring(
+								0,
+								post.getTimestamp().toGMTString()
+										.indexOf(" ", 9)));
+		iv.put(postIndexed, post.getIndexed().toGMTString());
+		return db.insert(DATABASE_TABLE_FAVS_NAME, null, iv);
 
 	}
 
@@ -203,6 +227,15 @@ public class DBAdapter {
 				null, null);
 	}
 
+	public Cursor getAllFavs() {
+		return db.query(DATABASE_TABLE_FAVS_NAME, new String[] { ID, postKey,
+				postLocation, postCategory, postSource, postHeading, postBody,
+				postLat, postLong, postPrice, postCurrency, postStatus,
+				postExternalID, postExternalURL, postAccountName,
+				postAccountID, postTimestamp, postIndexed }, null, null, null,
+				null, null);
+	}
+	
 	public Cursor getAllLocationss() {
 		return db.query(DATABASE_TABLE_NAME, new String[] { ID, CODE, CITY,
 				CITYRANK, COUNTRY, COUNTRYRANK, STATECODE, STATENAME, HIDDEN,
@@ -235,6 +268,11 @@ public class DBAdapter {
 		return db.query(DATABASE_TABLE_POSTS_NAME, null, ID + " = '" + postID
 				+ "'", null, null, null, null);
 	}
+	
+	public Cursor getFav(int postID) {
+		return db.query(DATABASE_TABLE_FAVS_NAME, null, ID + " = '" + postID
+				+ "'", null, null, null, null);
+	}
 
 	public Cursor getLocation(long rowId) throws SQLException {
 		Cursor mCursor = db.query(true, DATABASE_TABLE_NAME, new String[] { ID,
@@ -250,6 +288,10 @@ public class DBAdapter {
 	public void clearPosts() throws SQLException {
 		db.delete(DATABASE_TABLE_POSTS_NAME, null, null);
 	}
+	
+	public void deleteFav(int postID) {
+		db.delete(DATABASE_TABLE_FAVS_NAME, ID + "=?", new String[] {""+postID});
+	}
 
 	public void beginTransaction() {
 		db.beginTransaction();
@@ -262,4 +304,7 @@ public class DBAdapter {
 	public void endTransaction() {
 		db.endTransaction();
 	}
+
+
+
 }

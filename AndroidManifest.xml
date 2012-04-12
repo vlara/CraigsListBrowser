@@ -31,6 +31,15 @@
             android:name=".PostActivity"
             android:theme="@style/Theme.Sherlock.Light" >
         </activity>
+        <activity
+            android:name=".FavsListActivity"
+            android:theme="@style/Theme.Sherlock.Light" >
+        </activity>
+        <activity
+            android:name=".FavPostActivity"
+            android:theme="@style/Theme.Sherlock.Light" >
+        </activity>
+        
     </application>
 
 </manifest>
