@@ -2,7 +2,10 @@ package com.vlara.craigslist.net;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.JsonSyntaxException;
 import com.threetaps.model.Posting;
@@ -31,6 +34,11 @@ public class PostAsyncTask extends AsyncTask<String, Void, String> {
 			for (int i = 0; i < posts.size(); i++) {
 				Posting post = posts.get(i);
 				if (post.getHeading() != null) {
+					Map<String, Object> anotations = post.getAnnotations();
+//					for (Map.Entry<String, Object> entry : anotations.entrySet()){
+//						Log.d(TAG, "Key: " + entry.getKey() + " Value: " + entry.getValue().toString());
+//					}
+					Log.d(TAG, "Annoations: " + anotations.size());
 					db.insert(post);
 				}
 			}

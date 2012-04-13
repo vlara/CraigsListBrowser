@@ -1,5 +1,7 @@
 package com.vlara.craigslist.db;
 
+import java.util.ArrayList;
+
 import com.threetaps.model.Posting;
 
 import android.content.ContentValues;
@@ -44,7 +46,7 @@ public class DBAdapter {
 	public static final String postLong = "longitude";
 	public static final String postPrice = "price";
 	public static final String postCurrency = "currency";
-	// replace with another db table
+	public static final String postImages = "images";
 	public static final String postStatus = "status";
 	public static final String postExternalID = "externalID";
 	public static final String postExternalURL = "externalURL";
@@ -79,8 +81,9 @@ public class DBAdapter {
 			+ postLat + " TEXT, " + postLong + " TEXT, " + postPrice
 			+ " TEXT, " + postCurrency + " TEXT, " + postStatus + " TEXT, "
 			+ postExternalID + " TEXT, " + postExternalURL + " TEXT, "
-			+ postAccountName + " TEXT, " + postAccountID + " TEXT, "
-			+ postTimestamp + " TEXT, " + postIndexed + " TEXT );";
+			+ postImages + " TEXT, " + postAccountName + " TEXT, "
+			+ postAccountID + " TEXT, " + postTimestamp + " TEXT, "
+			+ postIndexed + " TEXT );";
 
 	private static final String DATABASE_TABLE_CREATE_FAVS = "CREATE TABLE "
 			+ DATABASE_TABLE_FAVS_NAME + " (" + ID
@@ -90,8 +93,9 @@ public class DBAdapter {
 			+ postLat + " TEXT, " + postLong + " TEXT, " + postPrice
 			+ " TEXT, " + postCurrency + " TEXT, " + postStatus + " TEXT, "
 			+ postExternalID + " TEXT, " + postExternalURL + " TEXT, "
-			+ postAccountName + " TEXT, " + postAccountID + " TEXT, "
-			+ postTimestamp + " TEXT, " + postIndexed + " TEXT );";
+			+ postImages + " TEXT, " + postAccountName + " TEXT, "
+			+ postAccountID + " TEXT, " + postTimestamp + " TEXT, "
+			+ postIndexed + " TEXT );";
 
 	private final Context context;
 
@@ -137,7 +141,19 @@ public class DBAdapter {
 	}
 
 	public long insert(Posting post) {
+		String imgs = "";
+		ArrayList<String> images = post.getImages();
+		if (images != null){
+			Log.d(TAG, "IMAGES SIZE" + images.size());
+			for (String imgUrl: images){
+				//create comma delimited string
+				imgs+= imgUrl + ",";
+			}
+			imgs = imgs.substring(0, imgs.length()-1);
+		}
+		
 		ContentValues iv = new ContentValues();
+		iv.put(postImages, imgs);
 		iv.put(postKey, post.getPostKey());
 		iv.put(postLocation, post.getLocation());
 		iv.put(postCategory, post.getCategory());
@@ -165,8 +181,20 @@ public class DBAdapter {
 	}
 
 	public long insertFav(Posting post) {
+		//create comma delimited string for images
+		String imgs = "";
+		ArrayList<String> images = post.getImages();
+		if (images != null){
+			Log.d(TAG, "IMAGES SIZE" + images.size());
+			for (String imgUrl: images){
+				//create comma delimited string
+				imgs+= imgUrl + ",";
+			}
+			imgs = imgs.substring(0, imgs.length()-1);
+		}
 		
 		ContentValues iv = new ContentValues();
+		iv.put(postImages, imgs);
 		iv.put(postKey, post.getPostKey());
 		iv.put(postLocation, post.getLocation());
 		iv.put(postCategory, post.getCategory());
@@ -235,7 +263,7 @@ public class DBAdapter {
 				postAccountID, postTimestamp, postIndexed }, null, null, null,
 				null, null);
 	}
-	
+
 	public Cursor getAllLocationss() {
 		return db.query(DATABASE_TABLE_NAME, new String[] { ID, CODE, CITY,
 				CITYRANK, COUNTRY, COUNTRYRANK, STATECODE, STATENAME, HIDDEN,
@@ -268,7 +296,7 @@ public class DBAdapter {
 		return db.query(DATABASE_TABLE_POSTS_NAME, null, ID + " = '" + postID
 				+ "'", null, null, null, null);
 	}
-	
+
 	public Cursor getFav(int postID) {
 		return db.query(DATABASE_TABLE_FAVS_NAME, null, ID + " = '" + postID
 				+ "'", null, null, null, null);
@@ -288,9 +316,10 @@ public class DBAdapter {
 	public void clearPosts() throws SQLException {
 		db.delete(DATABASE_TABLE_POSTS_NAME, null, null);
 	}
-	
+
 	public void deleteFav(int postID) {
-		db.delete(DATABASE_TABLE_FAVS_NAME, ID + "=?", new String[] {""+postID});
+		db.delete(DATABASE_TABLE_FAVS_NAME, ID + "=?", new String[] { ""
+				+ postID });
 	}
 
 	public void beginTransaction() {
@@ -304,7 +333,5 @@ public class DBAdapter {
 	public void endTransaction() {
 		db.endTransaction();
 	}
-
-
 
 }
