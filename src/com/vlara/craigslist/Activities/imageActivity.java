@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import com.threetaps.model.Posting;
 import com.vlara.craigslist.R;
-import com.vlara.craigslist.db.DBAdapter;
 import com.vlara.craigslist.net.ImageAsyncTask;
 
 public class imageActivity extends SherlockFragment {
@@ -33,9 +32,9 @@ public class imageActivity extends SherlockFragment {
 	public TextView body;
 	public TextView account;
 	public TextView externalURL;
+	public TextView tv;
 	public Posting post;
 	public int postID;
-	public static DBAdapter db;
 	public String[] images;
 	public Map<String, Bitmap> imageMap;
 	public static Context ctx;
@@ -64,14 +63,19 @@ public class imageActivity extends SherlockFragment {
 
 		View v = inflator.inflate(R.layout.images, container, false);
 		gallery = ((Gallery) v.findViewById(R.id.gallery));
+		tv = (TextView) v.findViewById(R.id.noImages);
+		tv.setText("Loading Images");
 		// images = null;
-		if (images != null) {
+		if (images.length > 0) {
 			Log.d(TAG, "IMAGES LENGTH: " + images.length);
 			for (String s : images) {
 				Log.d(TAG, "Image URL: " + s);
 			}
+		} else {
+			TextView tv = (TextView) v.findViewById(R.id.noImages);
+			tv.setText("No Images");
 		}
-		db = new DBAdapter(v.getContext());
+
 		ctx = getActivity().getApplicationContext();
 		ImageAsyncTask iat = new ImageAsyncTask(this);
 		iat.execute(images);
@@ -191,6 +195,14 @@ public class imageActivity extends SherlockFragment {
 			}
 		});
 		dialog.show();
+	}
+
+	public void showText() {
+		tv.setText("No Images");
+	}
+
+	public void clearText() {
+		tv.setText("");
 	}
 
 }
