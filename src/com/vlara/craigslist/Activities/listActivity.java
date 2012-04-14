@@ -102,7 +102,7 @@ public class listActivity extends SherlockListActivity {
 			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
 			int PostId = c1.getInt(c1.getColumnIndex("_id"));
 			Log.d(TAG, "PostID: " + PostId);
-			Intent i = new Intent(getApplicationContext(), PostActivity.class);
+			Intent i = new Intent(getApplicationContext(), postTabs.class);
 			i.putExtra("postID", PostId);
 			startActivity(i);
 		}

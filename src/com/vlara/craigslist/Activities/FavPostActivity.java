@@ -38,9 +38,9 @@ public class FavPostActivity extends SherlockActivity {
 		Bundle extras = getIntent().getExtras();
 		db = new DBAdapter(this);
 		heading = (TextView) findViewById(R.id.postHeading);
-		body = (TextView) findViewById(R.id.postBody);
-		account = (TextView) findViewById(R.id.postAccount);
-		externalURL = (TextView) findViewById(R.id.externalURL);
+		//body = (TextView) findViewById(R.id.postBody);
+		//account = (TextView) findViewById(R.id.postAccount);
+		//externalURL = (TextView) findViewById(R.id.externalURL);
 
 		if (extras != null) {
 			postID = extras.getInt("postID");

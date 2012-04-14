@@ -50,9 +50,9 @@ public class PostActivity extends SherlockActivity {
 		Bundle extras = getIntent().getExtras();
 		db = new DBAdapter(this);
 		heading = (TextView) findViewById(R.id.postHeading);
-		body = (TextView) findViewById(R.id.postBody);
-		account = (TextView) findViewById(R.id.postAccount);
-		externalURL = (TextView) findViewById(R.id.externalURL);
+		//body = (TextView) findViewById(R.id.postBody);
+		//account = (TextView) findViewById(R.id.postAccount);
+		//externalURL = (TextView) findViewById(R.id.externalURL);
 
 		if (extras != null) {
 			postID = extras.getInt("postID");
@@ -74,7 +74,7 @@ public class PostActivity extends SherlockActivity {
 			else
 				account.setVisibility(View.GONE);
 			
-			((Gallery) findViewById(R.id.gallery)).setAdapter(new ImageAdapter(this));
+			//((Gallery) findViewById(R.id.gallery)).setAdapter(new ImageAdapter(this));
 		}
 		db.close();
 	}
