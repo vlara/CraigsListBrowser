@@ -27,8 +27,9 @@ import com.vlara.craigslist.db.DBAdapter;
 public class postTabs extends SherlockFragmentActivity {
 	TabHost mTabHost;
 	TabManager mTabManager;
+	public String imgString;
 	public Posting post;
-	public int postID;
+	public int postID, postType;
 	public static DBAdapter db;
 	public final static String TAG = "CraigsApp";
 	public String[] images;
@@ -37,20 +38,28 @@ public class postTabs extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_tabs);
+		imgString = "";
 		db = new DBAdapter(this);
 		images = null;
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setTitle("Post");
 
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			postID = extras.getInt("postID");
+			postType = extras.getInt("type");
 		}
 
 		db.open();
-		Cursor c = db.getPost(postID);
-
+		Cursor c = null;
+		Log.d(TAG, "POST ID: " + postID + " done");
+		if (postType == 1) {
+			getSupportActionBar().setTitle("Fav Post");
+			c = db.getFav(postID);
+		} else {
+			getSupportActionBar().setTitle("Post");
+			c = db.getPost(postID);
+		}
 		if (c.moveToFirst()) {
 			Log.d(TAG, "Cursor Count: " + c.getCount());
 			post = cursorToPost(c);
@@ -59,7 +68,7 @@ public class postTabs extends SherlockFragmentActivity {
 		db.close();
 		Bundle imgsExtra = new Bundle();
 		imgsExtra.putStringArray("images", images);
-		
+
 		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
 		mTabHost.setup();
 
@@ -83,7 +92,10 @@ public class postTabs extends SherlockFragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.favsmenu, menu);
+		if (postType == 0)
+			inflater.inflate(R.menu.favsmenu, menu);
+		else
+			inflater.inflate(R.menu.favpostmenu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -105,6 +117,18 @@ public class postTabs extends SherlockFragmentActivity {
 		case R.id.browsePost:
 			browsePost();
 			return true;
+		case R.id.deletePost:
+			Log.d(TAG, "Pressed Delete Button");
+			deleteFav();
+			finish();
+			return true;
+		case R.id.FavShareButton:
+			sharePost();
+			return true;
+		case R.id.browseFavPost:
+			browsePost();
+			return true;
+
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
@@ -126,9 +150,15 @@ public class postTabs extends SherlockFragmentActivity {
 		startActivity(Intent.createChooser(sharingIntent, "Share Via"));
 	}
 
+	public void deleteFav() {
+		db.open();
+		db.deleteFav(postID);
+		db.close();
+	}
+
 	public void addFav() {
 		db.open();
-		db.insertFav(post);
+		db.insertFav(post, imgString);
 		db.close();
 	}
 
@@ -155,7 +185,9 @@ public class postTabs extends SherlockFragmentActivity {
 		p.setTimestamp(new Date(c.getString(c
 				.getColumnIndexOrThrow("timestamp"))));
 		p.setIndexed(new Date(c.getString(c.getColumnIndexOrThrow("indexed"))));
-		images = c.getString(c.getColumnIndexOrThrow("images")).split(",");
+		imgString = c.getString(c.getColumnIndexOrThrow("images"));
+		Log.d(TAG, "IMG STRING: " + imgString);
+		images = imgString.split(",");
 		return p;
 
 	}

@@ -34,7 +34,7 @@ public class imageActivity extends SherlockFragment {
 	public TextView externalURL;
 	public TextView tv;
 	public Posting post;
-	public int postID;
+	public int postID, postType;
 	public String[] images;
 	public Map<String, Bitmap> imageMap;
 	public static Context ctx;

@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.Html;
 import android.util.Log;
 
 public class DBAdapter {
@@ -158,8 +159,8 @@ public class DBAdapter {
 		iv.put(postLocation, post.getLocation());
 		iv.put(postCategory, post.getCategory());
 		iv.put(postSource, post.getSource());
-		iv.put(postHeading, post.getHeading().trim());
-		iv.put(postBody, post.getBody());
+		iv.put(postHeading, Html.fromHtml(post.getHeading().trim()).toString());
+		iv.put(postBody, Html.fromHtml(post.getBody()).toString());
 		iv.put(postLat, post.getLatitude());
 		iv.put(postLong, post.getLongitude());
 		iv.put(postPrice, post.getPrice());
@@ -180,18 +181,18 @@ public class DBAdapter {
 		return db.insert(DATABASE_TABLE_POSTS_NAME, null, iv);
 	}
 
-	public long insertFav(Posting post) {
+	public long insertFav(Posting post, String imgs) {
 		//create comma delimited string for images
-		String imgs = "";
-		ArrayList<String> images = post.getImages();
-		if (images != null){
-			Log.d(TAG, "IMAGES SIZE" + images.size());
-			for (String imgUrl: images){
-				//create comma delimited string
-				imgs+= imgUrl + ",";
-			}
-			imgs = imgs.substring(0, imgs.length()-1);
-		}
+//		String imgs = "";
+//		ArrayList<String> images = post.getImages();
+//		if (images != null){
+//			Log.d(TAG, "IMAGES SIZE" + images.size());
+//			for (String imgUrl: images){
+//				//create comma delimited string
+//				imgs+= imgUrl + ",";
+//			}
+//			imgs = imgs.substring(0, imgs.length()-1);
+//		}
 		
 		ContentValues iv = new ContentValues();
 		iv.put(postImages, imgs);

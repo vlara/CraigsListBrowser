@@ -104,6 +104,7 @@ public class listActivity extends SherlockListActivity {
 			Log.d(TAG, "PostID: " + PostId);
 			Intent i = new Intent(getApplicationContext(), postTabs.class);
 			i.putExtra("postID", PostId);
+			i.putExtra("type", 0);
 			startActivity(i);
 		}
 		

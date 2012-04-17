@@ -23,15 +23,16 @@ public class PostActivity extends SherlockFragment {
 	public TextView account;
 	public TextView externalURL;
 	public Posting post;
-	public int postID;
+	public int postID, postType;
 	public static DBAdapter db;
 	public String[] images;
 
-	static PostActivity newInstance(int _postId) {
+	static PostActivity newInstance(int _postId, int _type) {
 		Log.d("ASASASASAS", "CONSTRUCTOR");
 		PostActivity a = new PostActivity();
 		Bundle args = new Bundle();
 		args.putInt("postID", _postId);
+		args.putInt("type", _type);
 		a.setArguments(args);
 		return a;
 	}
@@ -40,6 +41,7 @@ public class PostActivity extends SherlockFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		postID = getArguments() != null ? getArguments().getInt("postID") : 1;
+		postType = getArguments() != null ? getArguments().getInt("type") : 0;
 	}
 
 	@Override
@@ -55,12 +57,17 @@ public class PostActivity extends SherlockFragment {
 		externalURL = (TextView) v.findViewById(R.id.externalURL);
 
 		db.open();
-		Cursor c = db.getPost(postID);
+		Cursor c = null;
+		if (postType == 1){
+			c = db.getFav(postID);
+		}else{
+			c = db.getPost(postID);
+		}
 
 		if (c.moveToFirst()) {
-			Log.d(TAG, "Cursor Count: " + c.getCount());
+			Log.d(TAG, "POST Cursor Count: " + c.getCount());
 			post = cursorToPost(c);
-			Log.d(TAG, post.toString());
+			Log.d(TAG, "POST: " +post.toString());
 
 			heading.setText(post.getHeading());
 			body.setText(post.getBody());

@@ -57,8 +57,9 @@ public class FavsListActivity extends SherlockListActivity {
 				long arg3) {
 			Cursor c1 = (Cursor) parent.getItemAtPosition(pos);
 			int PostId = c1.getInt(c1.getColumnIndex("_id"));
-			Intent i = new Intent(getApplicationContext(), FavPostActivity.class);
+			Intent i = new Intent(getApplicationContext(), postTabs.class);
 			i.putExtra("postID", PostId);
+			i.putExtra("type", 1);
 			startActivity(i);
 		}
 	};
