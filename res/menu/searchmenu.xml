@@ -5,11 +5,12 @@
         android:id="@+id/FavsButton"
         android:showAsAction="always"
         android:title="Favs"> <!-- android:icon="@drawable/ic_action_settings"> -->
->
+
     </item>
     <item
         android:id="@+id/SearchButton"
         android:showAsAction="always"
+        android:icon="@drawable/search"
         android:title="Search">
     </item>
 
