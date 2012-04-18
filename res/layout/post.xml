@@ -4,88 +4,39 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TabHost
-        android:id="@android:id/tabhost"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    <TextView
+        android:id="@+id/postHeading"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Heading"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <LinearLayout
+    <TextView
+        android:id="@+id/postAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Email" />
+
+    <TextView
+        android:id="@+id/externalURL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Url"
+        android:textColor="#0276FD" />
+
+    <ScrollView
+        android:id="@+id/SCROLLER_ID"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.85"
+        android:fillViewport="true"
+        android:scrollbars="vertical" >
+
+        <TextView
+            android:id="@+id/postBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-            </TabWidget>
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-
-                <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="test" >
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-                </LinearLayout>
-            </FrameLayout>
-
-            <TextView
-                android:id="@+id/postHeading"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="HEADING"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <TextView
-                android:id="@+id/postAccount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="email" />
-
-            <TextView
-                android:id="@+id/externalURL"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="URL"
-                android:textColor="#0276FD" />
-
-            <Gallery
-                android:id="@+id/gallery"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <ScrollView
-                android:id="@+id/SCROLLER_ID"
-                android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.85"
-                android:fillViewport="true"
-                android:scrollbars="vertical" >
-
-                <TextView
-                    android:id="@+id/postBody"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".70"
-                    android:text="Body" />
-            </ScrollView>
-        </LinearLayout>
-    </TabHost>
+            android:text="@string/Body" />
+    </ScrollView>
 
 </LinearLayout>

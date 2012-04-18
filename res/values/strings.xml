@@ -3,5 +3,15 @@
 
     <string name="hello">Hello World, CraigsListBrowserActivity!</string>
     <string name="app_name">CraigsListBrowser</string>
-
+    <string name="State">State</string>
+    <string name="City">City</string>
+    <string name="Group">Group</string>
+    <string name="Category">Category</string>
+    <string name="WildCard">Blank For Wildcard</string>
+    <string name="Search">Search</string>
+    <string name="PostImage">Post Image</string>
+    <string name="Heading">Post Heading</string>
+	<string name="Email">Post Email</string>
+	<string name="Url">Post Url</string>
+	<string name="Body">Post Body</string>
 </resources>

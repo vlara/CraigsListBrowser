@@ -9,7 +9,7 @@
         android:layout_width="75dip"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/State"
-        android:text="State" />
+        android:text="@string/State" />
 
     <Spinner
         android:id="@+id/State"
@@ -22,7 +22,7 @@
         android:layout_width="75dip"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/City"
-        android:text="city" />
+        android:text="@string/City" />
 
     <Spinner
         android:id="@+id/City"
@@ -36,7 +36,7 @@
         android:layout_width="75dip"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/Group"
-        android:text="group" />
+        android:text="@string/Group" />
 
     <Spinner
         android:id="@+id/Group"
@@ -50,7 +50,7 @@
         android:layout_width="75dip"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/Category"
-        android:text="Category" />
+        android:text="@string/Category" />
 
     <Spinner
         android:id="@+id/Category"
@@ -65,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/Category"
         android:layout_toRightOf="@+id/searchText"
-        android:hint="Blank for Wildcard" >
+        android:hint="@string/WildCard" >
 
         <requestFocus />
     </EditText>
@@ -77,6 +77,6 @@
         android:layout_alignBaseline="@+id/Search"
         android:layout_alignBottom="@+id/Search"
         android:layout_toLeftOf="@+id/Category"
-        android:text="Search" />
+        android:text="@string/Search" />
 
 </RelativeLayout>

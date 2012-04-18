@@ -8,9 +8,8 @@
     <ImageView
         android:id="@+id/fullimage"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" 
-        android:contentDescription="Post Image">
+        android:layout_height="fill_parent"
+        android:contentDescription="@string/PostImage" >
     </ImageView>
-
 
 </LinearLayout>

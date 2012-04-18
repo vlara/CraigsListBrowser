@@ -13,8 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -139,15 +139,9 @@ public class imageActivity extends SherlockFragment {
 		 */
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ImageView i = new ImageView(this.myContext);
-			/* Apply the Bitmap to the ImageView that will be returned. */
-			// if (images.length > 1)
-			// i.setImageBitmap(imageMap.get(images[position +
-			// 1].replace("/thumb", "")));
-			// else
+			
 			i.setImageBitmap(imageMap.get(images[position]));
-			/* Image should be scaled as width/height are set. */
 			i.setScaleType(ImageView.ScaleType.FIT_CENTER);
-			/* Set the Width/Height of the ImageView. */
 			i.setLayoutParams(new Gallery.LayoutParams(300, 300));
 			return i;
 		}
@@ -163,7 +157,6 @@ public class imageActivity extends SherlockFragment {
 	}
 
 	public void displayImages() {
-		// TODO Auto-generated method stub
 		for (Map.Entry<String, Bitmap> entry : imageMap.entrySet()) {
 			Log.d(TAG, "Value: " + entry.getKey());
 		}
@@ -180,20 +173,26 @@ public class imageActivity extends SherlockFragment {
 		});
 	}
 
-	public void loadPhoto(int pos) {
-		dialog = new Dialog(this.getActivity());
-		dialog.setContentView(R.layout.fullimage_dialog);
-		dialog.setTitle("Post Image");
-		dialog.setCancelable(true);
-
-		ImageView iv = (ImageView) dialog.findViewById(R.id.fullimage);
-		iv.setImageBitmap(imageMap.get(images[pos]));
-		iv.setOnClickListener(new OnClickListener() {
+	public void loadPhoto(final int pos) {
+		dialog = new Dialog(this.getActivity(), R.style.full_screen_dialog) {
 			@Override
-			public void onClick(View v) {
-				dialog.dismiss();
+			protected void onCreate(Bundle savedInstanceState) {
+				super.onCreate(savedInstanceState);
+				setContentView(R.layout.fullimage_dialog);
+				getWindow().setLayout(LayoutParams.FILL_PARENT,
+						LayoutParams.FILL_PARENT);
+				ImageView iv = (ImageView) dialog.findViewById(R.id.fullimage);
+				iv.setImageBitmap(imageMap.get(images[pos]));
+				iv.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
 			}
-		});
+		};
+		dialog.setTitle("Post Image");
 		dialog.show();
 	}
 
